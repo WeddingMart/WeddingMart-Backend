@@ -3,16 +3,15 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 import os
-from dotenv import load_dotenv
 
-# Load environment variables from db.env
-load_dotenv('db.env')
+user = os.environ["DB_USER"]
+password = os.environ["DB_PASS"]
+host = os.environ["DB_HOST"]
+port = os.environ["DB_PORT"]
+database = os.environ["DB_NAME"]
 
 # Retrieve variables from the environment
-DATABASE_URL = (
-    f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}"
-    f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-)
+DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)

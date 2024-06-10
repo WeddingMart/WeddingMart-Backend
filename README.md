@@ -1,11 +1,14 @@
-python3 -m venv env
-source env/bin/activate
-pip install fastapi uvicorn sqlalchemy asyncpg python-dotenv
-
-
 # FastAPI Backend
 
 This repository contains a FastAPI backend for WeddingMart. Follow the instructions below to set up and run the project.
+
+## Quick Start
+```sh
+python3 -m venv env
+source env/bin/activate
+pip install fastapi uvicorn sqlalchemy asyncpg python-dotenv
+uvicorn app.main:app --reload
+```
 
 ## Prerequisites
 
@@ -48,11 +51,12 @@ Before you begin, ensure you have met the following requirements:
 
 ## Running the Application
 
-To run the FastAPI application, execute the following command:
+To run the FastAPI application, execute the following command (from the top level directory; not in /app):
 
 ```sh
 python3 main.py
 ```
+
 To run in production
 ```sh
 uvicorn app.main:app --reload
@@ -73,33 +77,19 @@ The project structure is as follows:
 
 ```
 .
-├── env/
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── models/
-│   │   └── ...
-│   ├── routes/
-│   │   └── ...
-│   ├── schemas/
-│   │   └── ...
-│   ├── services/
-│   │   └── ...
-│   └── tests/
-│       └── ...
-├── requirements.txt
-├── index.py
-└── README.md
-```
+│
+├── app/             
+│   ├── __init__.py 
+│   ├── main.py     
+│   ├── database.py 
+│   └── routers/    
+│       ├── __init__.py
+│       └── item_router.py
+│
+├── README.md       
+└── requirements.txt
 
-- **env/**: The virtual environment directory.
-- **app/**: The main application directory containing:
-  - **main.py**: The entry point of the application.
-  - **models/**: Database models.
-  - **routes/**: API route definitions.
-  - **schemas/**: Pydantic models for request and response bodies.
-  - **services/**: Business logic and services.
-  - **tests/**: Unit tests.
+```
 
 ## Contributing
 
