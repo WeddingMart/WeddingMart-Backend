@@ -1,3 +1,8 @@
+python3 -m venv env
+source env/bin/activate
+pip install fastapi uvicorn sqlalchemy asyncpg python-dotenv
+
+
 # FastAPI Backend
 
 This repository contains a FastAPI backend for WeddingMart. Follow the instructions below to set up and run the project.
@@ -46,7 +51,11 @@ Before you begin, ensure you have met the following requirements:
 To run the FastAPI application, execute the following command:
 
 ```sh
-python3 index.py
+python3 main.py
+```
+To run in production
+```sh
+uvicorn app.main:app --reload
 ```
 
 The application will start and be accessible at `http://127.0.0.1:8000`.
