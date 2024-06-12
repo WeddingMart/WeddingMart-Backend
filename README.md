@@ -6,7 +6,7 @@ This repository contains a FastAPI backend for WeddingMart. Follow the instructi
 ```sh
 python3 -m venv env
 source env/bin/activate
-pip install fastapi uvicorn sqlalchemy asyncpg python-dotenv
+pip install fastapi uvicorn sqlalchemy asyncpg python-dotenv pyjwt bcrypt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
