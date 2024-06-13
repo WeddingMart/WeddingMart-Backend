@@ -54,26 +54,21 @@ async def create_account_and_vendor(account_data: AccountCreate, vendor_data: Ve
     return {"message": "Account and vendor created successfully"}
 
 # move this to account router
-@router.delete("/api/vendor/delete", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/api/vendor/delete", status_code=status.HTTP_200_OK)
 async def delete_vendor(account_data: AccountDelete, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     print('debug0')
     # Start a transaction
     async with db.begin():
         account_id = account_data.account_id
-        print('debug1')
         # Check if the account exists
         account_stmt = select(Account).where(Account.accountid == account_id)
-        print('debug2')
         account_result = await db.execute(account_stmt)
-        print('debug3')
         retrieved_account = account_result.scalars().first()
-        print('debug4')
+
         if not retrieved_account:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
         if retrieved_account.email != current_user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token and Username do not match")
-
-        print('debug5')
         
         # Retrieve the vendor associated with this account
         vendor_stmt = select(Vendor).where(Vendor.accountid == account_id)

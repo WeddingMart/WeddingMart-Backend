@@ -38,19 +38,17 @@ class Listing(Base):
     __tablename__ = 'listing'
     
     listingid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)
-    description = Column(Text, nullable=True)
-    instagram = Column(String, nullable=True)
-    twitter = Column(String, nullable=True)
-    pinterest = Column(String, nullable=True)
-    spotify = Column(String, nullable=True)
-    soundcloud = Column(String, nullable=True)
-    facebook = Column(String, nullable=True)
-    listingcity = Column(String, nullable=False)
-    listingstate = Column(String, nullable=False)
-    listingcategory = Column(String, nullable=False)
-
-    # Foreign key to Vendor
+    title = Column(String)
+    description = Column(String(2048))
+    instagram = Column(String(2048))
+    twitter = Column(String(2048))
+    pinterest = Column(String(2048))
+    spotify = Column(String(2048))
+    soundcloud = Column(String(2048))
+    facebook = Column(String(2048))
+    listingcity = Column(String(50), nullable=False)
+    listingstate = Column(String(2), nullable=False)
+    listingcategory = Column(String(32), nullable=False)
     vendorid = Column(UUID(as_uuid=True), ForeignKey('vendor.vendorid'), nullable=False)
 
     # Relationship to Vendor
