@@ -6,7 +6,7 @@ from ..core.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
 from app.models.sqlalchemy_models import Account  # adjust import path as needed
 from sqlalchemy.future import select
-from app.core.security import verify_password
+from app.core.security import verify_password, hash_password
 from sqlalchemy.orm import selectinload
 
 
@@ -19,9 +19,7 @@ async def authenticate_user(db: AsyncSession, email: str, password: str):
     async with db.begin():
         result = await db.execute(select(Account).filter(Account.email == email))
         user = result.scalars().first()
-        # if user and verify_password(password, user.password):
-        print('LOOK AT ME:', user, password)
-        if user and password == user.password:
+        if user and verify_password(password, user.password):
             user_data = {
                 'accountid': str(user.accountid),  # Ensure UUID is in a serializable format
                 'email': user.email,
@@ -49,7 +47,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     """
     # Replace `authenticate_user` with your actual user authentication logic against the database
     user = await authenticate_user(db, form_data.username, form_data.password)
-    print('LOOK AT ME 2:', user)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -60,4 +57,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = create_access_token(
         data={"sub": user['email']}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"account_id": user['accountid'], "access_token": access_token, "token_type": "bearer"}
+
+# DELETE ME
+@router.get("/api/auth/tmp")
+async def tmp():
+    return {"this_is_a_hash": hash_password("securePassword123")}

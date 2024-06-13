@@ -15,3 +15,6 @@ class VendorCreate(BaseModel):
 
 class ListingCreate(BaseModel):
     title: str
+
+class AccountDelete(BaseModel):
+    account_id: UUID
