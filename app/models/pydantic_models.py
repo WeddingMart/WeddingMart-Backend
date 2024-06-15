@@ -26,6 +26,12 @@ class AccountCreate(BaseModel):
     firstname: str
     lastname: str
 
+class AccountUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    password: Optional[constr(min_length=8)] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+
 class VendorCreate(BaseModel):
     vendorname: str
 

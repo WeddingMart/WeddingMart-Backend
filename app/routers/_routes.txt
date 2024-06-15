@@ -1,0 +1,125 @@
+### Account Routes
+POST /accounts
+  - Create a new account
+
+GET /accounts/{account_id}
+  - Retrieve account details by account ID
+
+PUT /accounts/{account_id}
+  - Update account details by account ID
+
+DELETE /accounts/{account_id}
+  - Delete an account by account ID
+
+
+### Client Routes
+POST /clients
+  - Create a new client
+
+GET /clients/{client_id}
+  - Retrieve client details by client ID
+
+PUT /clients/{client_id}
+  - Update client details by client ID
+
+DELETE /clients/{client_id}
+  - Delete a client by client ID
+
+
+### Vendor Routes
+POST /vendors
+  - Create a new vendor
+
+GET /vendors/{vendor_id}
+  - Retrieve vendor details by vendor ID
+
+PUT /vendors/{vendor_id}
+  - Update vendor details by vendor ID
+
+DELETE /vendors/{vendor_id}
+  - Delete a vendor by vendor ID
+
+
+### Listing Routes
+POST /listings
+  - Create a new listing
+
+GET /listings
+  - Retrieve all listings
+
+GET /listings/{listing_id}
+  - Retrieve listing details by listing ID
+
+PUT /listings/{listing_id}
+  - Update listing details by listing ID
+
+DELETE /listings/{listing_id}
+  - Delete a listing by listing ID
+
+
+### Booking Routes
+POST /bookings
+  - Create a new booking
+
+GET /bookings
+  - Retrieve all bookings
+
+GET /bookings/{booking_id}
+  - Retrieve booking details by booking ID
+
+PUT /bookings/{booking_id}
+  - Update booking details by booking ID
+
+DELETE /bookings/{booking_id}
+  - Delete a booking by booking ID
+
+
+### Conversation Routes
+POST /conversations
+  - Create a new conversation
+
+GET /conversations
+  - Retrieve all conversations
+
+GET /conversations/{conversation_id}
+  - Retrieve conversation details by conversation ID
+
+PUT /conversations/{conversation_id}
+  - Update conversation details by conversation ID
+
+DELETE /conversations/{conversation_id}
+  - Delete a conversation by conversation ID
+
+
+### Message Routes
+POST /messages
+  - Create a new message
+
+GET /messages
+  - Retrieve all messages
+
+GET /messages/{message_id}
+  - Retrieve message details by message ID
+
+PUT /messages/{message_id}
+  - Update message details by message ID
+
+DELETE /messages/{message_id}
+  - Delete a message by message ID
+
+
+### Review Routes
+POST /reviews
+  - Create a new review
+
+GET /reviews
+  - Retrieve all reviews
+
+GET /reviews/{review_id}
+  - Retrieve review details by review ID
+
+PUT /reviews/{review_id}
+  - Update review details by review ID
+
+DELETE /reviews/{review_id}
+  - Delete a review by review ID

@@ -1,0 +1,120 @@
+Let's update the database schema to reflect your changes:
+
+1. **Accounts** table
+2. **Clients** table (linked to Accounts)
+3. **Vendors** table (linked to Accounts)
+4. **Listings** table (linked to Vendors)
+5. **Bookings** table (linked to Clients, Vendors, and Listings) with a completion status
+6. **Conversations** table (linked to Listings, Clients, and Vendors)
+7. **Messages** table (linked to Conversations and Accounts)
+8. **Reviews** table (linked to Listings and Clients, and only allowed if the booking is completed)
+
+### Tables and Relationships:
+
+#### Accounts
+- `account_id` (PK)
+- `email`
+- `password`
+- `created_at`
+
+#### Clients
+- `client_id` (PK)
+- `account_id` (FK) -> Accounts
+- `name`
+- `address`
+- `phone`
+
+#### Vendors
+- `vendor_id` (PK)
+- `account_id` (FK) -> Accounts
+- `name`
+- `business_name`
+- `address`
+- `phone`
+
+#### Listings
+- `listing_id` (PK)
+- `vendor_id` (FK) -> Vendors
+- `title`
+- `description`
+- `price`
+- `created_at`
+
+#### Bookings
+- `booking_id` (PK)
+- `client_id` (FK) -> Clients
+- `vendor_id` (FK) -> Vendors
+- `listing_id` (FK) -> Listings
+- `amount`
+- `status`
+- `completion`
+- `booking_date`
+
+#### Conversations
+- `conversation_id` (PK)
+- `listing_id` (FK) -> Listings
+- `client_id` (FK) -> Clients
+- `vendor_id` (FK) -> Vendors
+- `started_at`
+
+#### Messages
+- `message_id` (PK)
+- `conversation_id` (FK) -> Conversations
+- `account_id` (FK) -> Accounts
+- `content`
+- `sent_at`
+
+#### Reviews
+- `review_id` (PK)
+- `listing_id` (FK) -> Listings
+- `client_id` (FK) -> Clients
+- `booking_id` (FK) -> Bookings
+- `rating`
+- `comment`
+- `review_date`
+
+### Explanation for Linking Conversations:
+Conversations should be linked by `client_id`, `vendor_id`, and `listing_id` rather than by `account_id`. This is because:
+- Each conversation is specific to a particular client and vendor interaction concerning a particular listing.
+- Using `client_id` and `vendor_id` makes it clear which roles are involved in the conversation.
+- Linking by `listing_id` ensures the context of the conversation is clear, related to a specific listing.
+- While `account_id` could work, it would not provide the clarity of the roles involved (client vs. vendor) and would lose the specific context provided by linking directly to clients, vendors, and listings.
+
+### Updated Database Schema Diagram:
+
+```plaintext
+Accounts (account_id, email, password, created_at)
+    |
+    |--< Clients (client_id, account_id, name, address, phone)
+    |
+    |--< Vendors (vendor_id, account_id, name, business_name, address, phone)
+           |
+           |--< Listings (listing_id, vendor_id, title, description, price, created_at)
+           |     |
+           |     |--< Bookings (booking_id, client_id, vendor_id, listing_id, amount, status, completion, booking_date)
+           |     |
+           |     |--< Conversations (conversation_id, listing_id, client_id, vendor_id, started_at)
+           |           |
+           |           |--< Messages (message_id, conversation_id, account_id, content, sent_at)
+           |     |
+           |     |--< Reviews (review_id, listing_id, client_id, booking_id, rating, comment, review_date)
+
+Clients (client_id)
+    |
+    |--< Bookings (booking_id, client_id, vendor_id, listing_id, amount, status, completion, booking_date)
+    |
+    |--< Conversations (conversation_id, listing_id, client_id, vendor_id, started_at)
+    |
+    |--< Reviews (review_id, listing_id, client_id, booking_id, rating, comment, review_date)
+
+Vendors (vendor_id)
+    |
+    |--< Conversations (conversation_id, listing_id, client_id, vendor_id, started_at)
+
+Messages (message_id)
+    |
+    |--< Accounts (account_id)
+
+```
+
+This schema uses surrogate keys (`account_id`, `client_id`, `vendor_id`, `listing_id`, `booking_id`, `conversation_id`, `message_id`, `review_id`) for all primary keys, ensuring uniqueness and simplifying relationships. Each table includes foreign keys to establish the necessary relationships between entities.
