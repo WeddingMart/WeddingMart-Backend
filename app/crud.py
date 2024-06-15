@@ -5,6 +5,7 @@ from sqlalchemy.future import select
 from sqlalchemy import delete
 from app.models.sqlalchemy_models import Account, Vendor, Listing
 from app.core.security import hash_password
+# from uuid import UUID
 
 async def create_account(db: AsyncSession, account_data):
     new_account = Account(
@@ -66,3 +67,48 @@ async def create_listing(db: AsyncSession, listing_data, vendor_id):
     db.add(new_listing)
     await db.flush()
     return new_listing
+
+async def edit_listing(db: AsyncSession, listing_data, vendor_id):
+    query = select(Listing).where(Listing.listingid == listing_data.listingid)
+    result = await db.execute(query)
+    listing = result.scalars().one_or_none()
+
+    if not listing:
+        return None
+    if listing.vendorid != vendor_id:
+        return None
+
+    for field, value in listing_data.dict(exclude_unset=True).items():
+        setattr(listing, field, value)
+    
+    await db.flush()
+    await db.refresh(listing)
+    return listing
+
+async def get_account_by_accountid(db: AsyncSession, account_id):
+    query = select(Account).where(Account.accountid == account_id)
+    result = await db.execute(query)
+    account = result.scalars().first()
+    if not account:
+        return None
+    return account
+
+async def get_vendor_by_vendorid(db: AsyncSession, vendor_id): # unused
+    query = select(Vendor).where(Vendor.vendorid == vendor_id)
+    result = await db.execute(query)
+    vendor = result.scalars().first()
+    if not vendor:
+        return None
+    return vendor
+
+async def get_vendor_by_accountid(db: AsyncSession, account_id):
+    query = select(Vendor).where(Vendor.accountid == account_id)
+    result = await db.execute(query)
+    vendor = result.scalars().first()
+    return vendor
+
+# async def get_listings_by_vendor(db: AsyncSession, vendor_id):
+#     query = select(Listing).where(Listing.vendorid == vendor_id)
+#     result = await db.execute(query)
+#     listings = result.scalars().all()
+#     return listings
