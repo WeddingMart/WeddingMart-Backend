@@ -28,11 +28,11 @@ async def create_vendor(db: AsyncSession, account_id, vendor_data):
     await db.flush()
     return new_vendor
 
-async def delete_vendor_and_account(db: AsyncSession, account_id, current_user):
+async def delete_vendor_and_account(db: AsyncSession, account_id):
     account_stmt = select(Account).where(Account.accountid == account_id)
     account_result = await db.execute(account_stmt)
     retrieved_account = account_result.scalars().first()
-    if not retrieved_account or retrieved_account.email != current_user:
+    if not retrieved_account:
         return None
 
     # Retrieve the vendor associated with the account_id
@@ -68,8 +68,8 @@ async def create_listing(db: AsyncSession, listing_data, vendor_id):
     await db.flush()
     return new_listing
 
-async def edit_listing(db: AsyncSession, listing_data, vendor_id):
-    query = select(Listing).where(Listing.listingid == listing_data.listingid)
+async def edit_listing(db: AsyncSession, listing_data, vendor_id, listing_id):
+    query = select(Listing).where(Listing.listingid == listing_id)
     result = await db.execute(query)
     listing = result.scalars().one_or_none()
 

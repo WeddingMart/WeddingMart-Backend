@@ -46,7 +46,6 @@ class AccountDelete(BaseModel):
     account_id: UUID
 
 class ListingEdit(BaseModel):
-    listingid: UUID
     title: Optional[constr(max_length=255)] = None
     description: Optional[constr(max_length=4098)] = None
     instagram: Optional[constr(max_length=255)] = None

@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
+from uuid import UUID
 
 # Configuration constants
 SECRET_KEY = "your_secret_key_here"  # Secret key for encoding and decoding JWTs
@@ -47,10 +48,11 @@ def verify_token(token: str, credentials_exception):
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        username: str = payload.get("sub")
+        accountid: int = payload.get("accountid")
+        if username is None:
             raise credentials_exception
-        return user_id
+        return {"username": username, "accountid": UUID(accountid)}
     except jwt.PyJWTError:
         raise credentials_exception
 
