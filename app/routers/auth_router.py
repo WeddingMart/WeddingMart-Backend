@@ -1,10 +1,12 @@
+# app/routers/auth_router.py
+
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ..database import get_db
 from ..core.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
-from app.models.sqlalchemy_models import Account  # adjust import path as needed
+from app.models.sqlalchemy_models import Accounts  # adjust import path as needed
 from sqlalchemy.future import select
 from app.core.security import verify_password, hash_password
 from sqlalchemy.orm import selectinload
@@ -17,7 +19,7 @@ router = APIRouter()
 async def authenticate_user(db: AsyncSession, email: str, password: str):
     """Authenticate user by verifying email and password."""
     async with db.begin():
-        result = await db.execute(select(Account).filter(Account.email == email))
+        result = await db.execute(select(Accounts).filter(Accounts.email == email))
         user = result.scalars().first()
         if user and verify_password(password, user.password):
             user_data = {

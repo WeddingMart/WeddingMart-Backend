@@ -13,7 +13,7 @@ from ..models.pydantic_models import (
     AccountCreate, VendorCreate, ListingCreate,
     AccountDelete, ListingEdit, AccountModel, VendorModel
 )
-from ..models.sqlalchemy_models import Account, Vendor, Listing
+from ..models.sqlalchemy_models import Accounts, Vendors, Listings
 from ..crud import (
     create_account, create_vendor, delete_vendor_and_account,
     create_listing, edit_listing, get_account_by_accountid,
@@ -25,14 +25,14 @@ from app.core.security import hash_password
 router = APIRouter()
 
 # Listing Routes
-@router.post("/api/account/{account_id}/vendor/listing", status_code=status.HTTP_201_CREATED)
+@router.post("/api/accounts/{account_id}/vendors/listings", status_code=status.HTTP_201_CREATED)
 async def create_listing_endpoint(account_id: UUID, listing_data: ListingCreate, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     if account_id != current_user['accountid']:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
 
     async with db.begin():
         # Retrieve vendor ID based on current user
-        vendor_stmt = select(Vendor).join(Account).where(Account.accountid == account_id)
+        vendor_stmt = select(Vendors).join(Accounts).where(Accounts.accountid == account_id)
         vendor_result = await db.execute(vendor_stmt)
         vendor = vendor_result.scalars().first()
 
@@ -44,22 +44,22 @@ async def create_listing_endpoint(account_id: UUID, listing_data: ListingCreate,
         listingid = listing.listingid
     return {"message": "Listing created successfully", "listing_id": str(listingid)}
 
-@router.get("/api/listing", status_code=status.HTTP_200_OK)
+@router.get("/api/listings", status_code=status.HTTP_200_OK)
 async def get_listings_endpoint(db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     return {}
 
-@router.get("/api/listing/{listing_id}", status_code=status.HTTP_200_OK)
+@router.get("/api/listings/{listing_id}", status_code=status.HTTP_200_OK)
 async def get_listing_endpoint(listing_id: UUID, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     return {}
 
-@router.put("/api/account/{account_id}/vendor/listing/{listing_id}", status_code=status.HTTP_200_OK)
+@router.put("/api/accounts/{account_id}/vendors/listings/{listing_id}", status_code=status.HTTP_200_OK)
 async def update_listing_endpoint(account_id: UUID, listing_id: UUID, listing_data: ListingEdit, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     if account_id != current_user['accountid']:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
     
     async with db.begin():
         # Retrieve vendor ID based on current user
-        vendor_stmt = select(Vendor).join(Account).where(Account.accountid == account_id)
+        vendor_stmt = select(Vendors).join(Accounts).where(Accounts.accountid == account_id)
         vendor_result = await db.execute(vendor_stmt)
         vendor = vendor_result.scalars().first()
 

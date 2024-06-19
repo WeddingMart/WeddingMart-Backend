@@ -6,8 +6,8 @@ import uuid
 
 Base = declarative_base()
 
-class Account(Base):
-    __tablename__ = 'account'
+class Accounts(Base):
+    __tablename__ = 'accounts'
     
     accountid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String, nullable=False)
@@ -19,23 +19,23 @@ class Account(Base):
     verificationid = Column(UUID(as_uuid=True), nullable=True)
 
     # Relationship to Vendor
-    vendors = relationship("Vendor", back_populates="account", uselist=False)  # One-to-one relationship
+    vendors = relationship("Vendors", back_populates="accounts", uselist=False)  # One-to-one relationship
 
-class Vendor(Base):
-    __tablename__ = 'vendor'
+class Vendors(Base):
+    __tablename__ = 'vendors'
     
     vendorid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    accountid = Column(UUID(as_uuid=True), ForeignKey('account.accountid'), nullable=False)
+    accountid = Column(UUID(as_uuid=True), ForeignKey('accounts.accountid'), nullable=False)
     vendorname = Column(String, nullable=False)
     
     # Relationship to Account
-    account = relationship("Account", back_populates="vendors")
+    accounts = relationship("Accounts", back_populates="vendors")
 
     # Relationship to Listing
-    listings = relationship("Listing", back_populates="vendor")
+    listings = relationship("Listings", back_populates="vendors")
 
-class Listing(Base):
-    __tablename__ = 'listing'
+class Listings(Base):
+    __tablename__ = 'listings'
     
     listingid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String)
@@ -49,7 +49,7 @@ class Listing(Base):
     listingcity = Column(String(50), nullable=False)
     listingstate = Column(String(2), nullable=False)
     listingcategory = Column(String(32), nullable=False)
-    vendorid = Column(UUID(as_uuid=True), ForeignKey('vendor.vendorid'), nullable=False)
+    vendorid = Column(UUID(as_uuid=True), ForeignKey('vendors.vendorid'), nullable=False)
 
     # Relationship to Vendor
-    vendor = relationship("Vendor", back_populates="listings")
+    vendors = relationship("Vendors", back_populates="listings")

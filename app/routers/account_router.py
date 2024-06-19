@@ -14,7 +14,7 @@ from ..models.pydantic_models import (
     AccountDelete, ListingEdit, AccountModel, VendorModel,
     AccountUpdate
 )
-from ..models.sqlalchemy_models import Account, Vendor, Listing
+from ..models.sqlalchemy_models import Accounts, Vendors, Listings
 from ..crud import (
     create_account, create_vendor, delete_vendor_and_account,
     create_listing, edit_listing, get_account_by_accountid,
@@ -30,7 +30,7 @@ router = APIRouter()
 async def create_account_endpoint(account: AccountCreate, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     return {}
 
-@router.get("/api/account/{account_id}", status_code=status.HTTP_200_OK)
+@router.get("/api/accounts/{account_id}", status_code=status.HTTP_200_OK)
 async def get_account_endpoint(account_id: UUID, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     if account_id != current_user['accountid']:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")

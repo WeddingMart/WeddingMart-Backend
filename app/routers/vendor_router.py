@@ -13,7 +13,7 @@ from ..models.pydantic_models import (
     AccountCreate, VendorCreate, ListingCreate,
     AccountDelete, ListingEdit, AccountModel, VendorModel
 )
-from ..models.sqlalchemy_models import Account, Vendor, Listing
+from ..models.sqlalchemy_models import Accounts, Vendors, Listings
 from ..crud import (
     create_account, create_vendor, delete_vendor_and_account,
     create_listing, edit_listing, get_account_by_accountid,
@@ -25,7 +25,7 @@ from app.core.security import hash_password
 router = APIRouter()
 
 # Vendor Routes
-@router.post("/api/vendor", status_code=status.HTTP_201_CREATED)
+@router.post("/api/vendors", status_code=status.HTTP_201_CREATED)
 async def create_account_and_vendor_endpoint(account_data: AccountCreate, vendor_data: VendorCreate, db: AsyncSession = Depends(get_db)):
     async with db.begin():
         new_account = await create_account(db, account_data)
@@ -33,12 +33,12 @@ async def create_account_and_vendor_endpoint(account_data: AccountCreate, vendor
     return {"message": "Account and vendor created successfully"}
 
 # get data about a specific vendor
-@router.get("/api/vendor/{vendor_id}", status_code=status.HTTP_200_OK)
+@router.get("/api/vendors/{vendor_id}", status_code=status.HTTP_200_OK)
 async def get_vendor_endpoint(vendor_id: UUID, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     return {}
 
 # protected access vendor
-@router.get("/api/account/{account_id}/vendor", response_model=VendorModel, status_code=status.HTTP_200_OK)
+@router.get("/api/accounts/{account_id}/vendors", response_model=VendorModel, status_code=status.HTTP_200_OK)
 async def get_vendor_by_accountid_endpoint(account_id: UUID, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     if account_id != current_user['accountid']:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
@@ -54,11 +54,11 @@ async def get_vendor_by_accountid_endpoint(account_id: UUID, db: AsyncSession = 
             vendorname=vendor.vendorname
         )
 
-@router.put("/api/vendor/{vendor_id}", status_code=status.HTTP_200_OK)
+@router.put("/api/vendors/{vendor_id}", status_code=status.HTTP_200_OK)
 async def update_vendor_endpoint(vendor_id: UUID, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     return {}
 
-@router.delete("/api/account/{account_id}/vendor", status_code=status.HTTP_200_OK)
+@router.delete("/api/accounts/{account_id}/vendors", status_code=status.HTTP_200_OK)
 async def delete_vendor_endpoint(account_id: UUID, account_data: AccountDelete, db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     if account_id != current_user['accountid']:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
